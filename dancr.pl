@@ -104,12 +104,13 @@ post '/add' => sub {
 
 any '/menu' => sub {
     Erik::dump( session => session );
-    if ( not session('logged_in') ) {
-        send_error( "Not logged in", 401 );
+    if ( session('logged_in') ) {
+        session 'logged_in' => true;
+        template 'menu.tt', {};
     }
-    session 'logged_in' => true;
-
-    template 'menu.tt', {};
+    else {
+        redirect '/';
+    }
 };
 
 any '/users' => sub {
