@@ -72,11 +72,14 @@ get '/' => sub {
   my $sql = 'select id, title, text from entries order by id desc';
   my $sth = $db->prepare($sql) or die $db->errstr;
   $sth->execute or die $sth->errstr;
-  #template 'show_entries.tt', { 
-     #'msg' => get_flash(),
-     #'add_entry_url' => uri_for('/add'),
-     #'entries' => $sth->fetchall_hashref('id'),
-  #};
+
+   if ( session('logged_in') ) {
+       redirect '/menu';
+   }
+   else {
+       redirect '/login';
+   }
+
   template 'show_menu.tt', { 
      'msg' => get_flash(),
      'add_entry_url' => uri_for('/users'),
@@ -95,6 +98,16 @@ post '/add' => sub {
 
    set_flash('New entry posted!');
    redirect '/';
+};
+
+any '/menu' => sub {
+   Erik::dump(session => session);
+   if ( not session('logged_in') ) {
+      send_error("Not logged in", 401);
+   }
+   session 'logged_in' => true;
+
+   template 'menu.tt', { };
 };
 
 any '/users' => sub {
