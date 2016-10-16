@@ -1,0 +1,7 @@
+[% IF session.logged_in %]
+
+<ul class=users>
+  <a href="/users">Users</a>
+</ul>
+
+[% END %]

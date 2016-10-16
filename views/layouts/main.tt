@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+  <title>AMC CMS</title>
+  <link rel=stylesheet type=text/css href="[% css_url %]">
+</head>
+<body>
+  <div class=page>
+  <div class="center" align="center">
+  <h1>AMC CMS</h1>
+     <div class=metanav>
+     [% IF not session.logged_in %]
+       <a href="[% login_url %]">log in</a>
+     [% ELSE %]
+       <a href="[% logout_url %]">log out</a>
+     [% END %]
+  </div>
+
+  [% IF session.logged_in %]
+  <ul class=users>
+    <a href="/users">Users</a>
+  </ul>
+  [% END %]
+
+  [% IF msg %]
+    <div class=flash> [% msg %] </div>
+  [% END %]
+    [% content %]
+  </div>
+</div>
+</body>
+</html>
+
