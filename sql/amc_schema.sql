@@ -1,4 +1,10 @@
 
+-- db setup
+
+-- CREATE USER 'amc'@'localhost' IDENTIFIED BY 'm1k3y';
+-- GRANT ALL ON amc.* TO 'amc'@'localhost';
+
+
 -- user
 
 create table user (
