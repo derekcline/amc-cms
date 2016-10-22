@@ -123,8 +123,7 @@ any '/users' => sub {
     session 'logged_in' => true;
 
     my $db = connect_db();
-    my $sql =
-'select id, first_name, middle_initial, last_name, email, phone from user';
+    my $sql = 'select id, first_name, middle_initial, last_name, email, phone from user';
     my $sth = $db->prepare($sql) or die $db->errstr;
     $sth->execute or die $sth->errstr;
     template 'show_users.tt',
@@ -170,6 +169,6 @@ get '/logout' => sub {
     redirect '/';
 };
 
-init_db();
+#init_db();
 start;
 
