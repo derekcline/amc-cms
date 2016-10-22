@@ -8,6 +8,8 @@ use File::Slurper qw/ read_text /;
 use Template;
 use Erik qw( off );
 
+my $prod_mode = 0; # if this is set to true then any login info is needed
+
 #set 'database'     => File::Spec->catfile(File::Spec->tmpdir(), 'dancr.db');
 set 'session'      => 'Simple';
 set 'template'     => 'template_toolkit';
@@ -143,10 +145,10 @@ any [ 'get', 'post' ] => '/login' => sub {
     if ( request->method() eq "POST" ) {
 
         # process form input
-        if ( params->{'username'} ne setting('username') ) {
+        if ($prod_mode &&  params->{'username'} ne setting('username') ) {
             $err = "Invalid username";
         }
-        elsif ( params->{'password'} ne setting('password') ) {
+        elsif ($prod_mode &&  params->{'password'} ne setting('password') ) {
             $err = "Invalid password";
         }
         else {
