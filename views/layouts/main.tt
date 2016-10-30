@@ -14,7 +14,7 @@
   [% END %]
 
   [% content %]
-  main menu | logout
+  <a href='/menu'>main menu</a> | logout
   </div>
 </div>
 </body>
