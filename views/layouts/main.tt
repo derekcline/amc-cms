@@ -7,14 +7,17 @@
 <body>
   <div class=page>
   <div class="center" align="center">
-  <h1>AMC CMS</h1>
+      <p><img src="/images/amc-cms-banner.jpg"></p>
 
   [% IF msg %]
     <div class=flash> [% msg %] </div>
   [% END %]
 
   [% content %]
+  <p />
+[% IF session.logged_in %]
   <a href='/menu'>main menu</a> | <a href='/logout'>logout</a>
+[% END %]
   </div>
 </div>
 </body>

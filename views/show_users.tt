@@ -1,13 +1,13 @@
 [% IF session.logged_in %]
 
-<ul class=users>
+<h2>Users</h2>
+
 [% IF users.size %]
   [% FOREACH id IN users.keys.nsort %]
-    <li><h2>[% users.$id.first_name %] [% users.$id.last_name %] - <a href='/user/[% id %]'>View</a></h2>
+    <h2>[% users.$id.first_name %] [% users.$id.last_name %] - <a href='/user/[% id %]'>View</a></h2>
   [% END %]
 [% ELSE %]
   <li><em>No users here so far</em>
 [% END %]
-</ul>
 
 [% END %]
