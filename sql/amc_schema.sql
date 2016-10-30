@@ -79,6 +79,7 @@ create table grouping_attribute (
      id int(11) not null primary key auto_increment,
      grouping_id int(11) not null,
      attribute_id int(11) not null,
+     display_order int(1) not null default 1,
      constraint foreign key (attribute_id) references attribute (id) on delete cascade on update cascade,
      constraint foreign key (grouping_id) references grouping (id) on delete cascade on update cascade
 );
