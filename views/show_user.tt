@@ -1,0 +1,8 @@
+[% IF session.logged_in %]
+
+    <div>Name: [% user.first_name %] [% user.last_name %]</div>
+    [% FOREACH id IN selection.keys %]
+        <div>[% selection.$id.grouping %]: [% selection.$id.value ? selection.$id.value : selection.$id.attribute %] </div>
+    [% END %]
+
+[% END %]

@@ -137,6 +137,40 @@ any '/users' => sub {
     #redirect '/';
 };
 
+any '/user/:user_id' => sub {
+    my $dbh = connect_db();
+    #my $grouping_sth = $dbh->prepare(q+
+    #    SELECT ga.id, g.display_name as grouping, a.display_name as attribute
+    #    FROM grouping g, attribute a, grouping_attribute ga
+    #    WHERE g.id = ga.grouping_id
+    #        AND ga.attribute_id = a.id
+    #    ORDER BY g.id, ga.display_order
+    #+) || die($dbh->errstr());
+    my $selection_sth = $dbh->prepare(q+
+        SELECT ua.id, ua.value, g.display_name as grouping, a.display_name as attribute
+        FROM user_attribute ua, attribute a, grouping_attribute ga, grouping g
+        WHERE ua.attribute_id = a.id
+            AND ua.attribute_id = ga.attribute_id
+            AND ga.grouping_id = g.id
+            AND ua.user_id = ?
+    +);
+    my $user_info_sth = $dbh->prepare(q+
+        SELECT u.id, u.first_name, u.last_name, a.display_name, ua.value
+        FROM user u, attribute a, user_attribute ua
+        WHERE u.id = ua.user_id
+            AND ua.attribute_id = a.id
+            AND u.id = ?
+    +) || die($dbh->errstr());
+    $selection_sth->execute(param('user_id')) || die($dbh->errstr());
+    $user_info_sth->execute(param('user_id')) || die($dbh->errstr());
+    template 'show_user.tt',
+      {
+        selection => $selection_sth->fetchall_hashref('id'),
+        msg       => get_flash(),
+        user      => $user_info_sth->fetchrow_hashref(),
+      };
+};
+
 any [ 'get', 'post' ] => '/login' => sub {
     Erik::warn();
     my $err;
