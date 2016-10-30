@@ -1,11 +1,13 @@
 [% IF session.logged_in %]
 
-<h2>Edit User</h2>
+    <h2>Show User</h2>
 
     <div>Name: [% user.first_name %] [% user.last_name %]</div>
     [% FOREACH id IN selection.keys %]
         <div>[% selection.$id.grouping %]: [% selection.$id.value ? selection.$id.value : selection.$id.attribute %] </div>
     [% END %]
-    <a href='/user/[% user.id %]/edit'>Edit User</a>
+    <p>
+      <a href='/user/[% user.id %]/edit'>Edit User</a>
+    </p>
 
 [% END %]

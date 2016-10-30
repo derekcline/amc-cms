@@ -4,7 +4,7 @@
 
 [% IF users.size %]
   [% FOREACH id IN users.keys.nsort %]
-    <h2>[% users.$id.first_name %] [% users.$id.last_name %] - <a href='/user/[% id %]'>View</a></h2>
+    <h3>[% users.$id.first_name %] [% users.$id.last_name %] - <a href='/user/[% id %]'>View</a></h3>
   [% END %]
 [% ELSE %]
   <li><em>No users here so far</em>
