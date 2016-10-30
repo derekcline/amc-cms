@@ -117,9 +117,8 @@ any '/menu' => sub {
 
 any '/users' => sub {
     Erik::dump( session => session );
-    if ( not session('logged_in') ) {
-        send_error( "Not logged in", 401 );
-    }
+    redirect '/login' unless session('logged_in');
+
     session 'logged_in' => true;
 
     my $db = connect_db();
@@ -138,6 +137,8 @@ any '/users' => sub {
 };
 
 any '/user/:user_id' => sub {
+    redirect '/login' unless session('logged_in');
+
     my $dbh = connect_db();
     my $selection_sth = $dbh->prepare(q+
         SELECT ua.id, ua.value, g.display_name as grouping, a.display_name as attribute
@@ -165,6 +166,8 @@ any '/user/:user_id' => sub {
 };
 
 get '/user/:user_id/edit' => sub {
+    redirect '/login' unless session('logged_in');
+
     my $dbh = connect_db();
     my $grouping_sth = $dbh->prepare(q+
         SELECT ga.id as id, g.id as grouping_id, a.id as attribute_id, g.display_name as grouping, a.display_name as attribute
