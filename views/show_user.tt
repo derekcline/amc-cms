@@ -4,5 +4,6 @@
     [% FOREACH id IN selection.keys %]
         <div>[% selection.$id.grouping %]: [% selection.$id.value ? selection.$id.value : selection.$id.attribute %] </div>
     [% END %]
+    <a href='/user/[% user.id %]/edit'>Edit User</a>
 
 [% END %]
