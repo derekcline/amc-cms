@@ -1,4 +1,4 @@
 <h2>Menu</h2>
 <p>
-    <a href="/users">Manage Users</a>
+    <h3><a href="/users">Manage Users</a></h3>
 </p>

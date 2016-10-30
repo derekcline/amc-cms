@@ -1,24 +1,28 @@
 [% IF session.logged_in %]
 
-This is the new edit screen:
+    <h2>Edit User</h2>
+
     <form method='POST'>
         <input type='hidden' name='user_id' value='[% user.id %]'>
         <div>First Name: <input type='text' name='first_name' value='[% user.first_name %]'></div>
         <div>Last Name: <input type='text' name='last_name' value='[% user.last_name %]'></div>
+        <p />
         [% SET grouping_id = 0 %]
         [% FOREACH id IN grouping.keys %]
             [% IF grouping_id != grouping.$id.grouping_id %]
                 [% IF grouping_id %]
-                    <hr />
+                <p />
                 [% END %]
                 <div>[% grouping.$id.grouping %]</div>
             [% END %]
             [% SET grouping_id = grouping.$id.grouping_id %]
             <div><input type="radio" name="grouping_[% grouping.$id.grouping_id %]" value="[%grouping.$id.attribute_id%]"> [% grouping.$id.attribute %]</div>
         [% END %]
+        <p />
         [% FOREACH id IN selection.keys %]
             <div>[% selection.$id.grouping %]: [% selection.$id.value ? selection.$id.value : selection.$id.attribute %] </div>
         [% END %]
+        <p />
         <input type='submit' name='update' value='Update'> <input type='submit' name='cancel' value='Cancel'> 
     </form>
 

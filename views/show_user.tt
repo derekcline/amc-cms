@@ -7,7 +7,7 @@
         <div>[% selection.$id.grouping %]: [% selection.$id.value ? selection.$id.value : selection.$id.attribute %] </div>
     [% END %]
     <p>
-      <a href='/user/[% user.id %]/edit'>Edit User</a>
+      <h3><a href='/user/[% user.id %]/edit'>Edit User</a></h3>
     </p>
 
 [% END %]
