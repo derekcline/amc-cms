@@ -3,7 +3,7 @@
 <ul class=users>
 [% IF users.size %]
   [% FOREACH id IN users.keys.nsort %]
-    <li><h2>[% users.$id.first_name %] [% users.$id.last_name %] - <a href='/user/[% id %]'>Edit</a></h2>
+    <li><h2>[% users.$id.first_name %] [% users.$id.last_name %] - <a href='/user/[% id %]'>View</a></h2>
   [% END %]
 [% ELSE %]
   <li><em>No users here so far</em>
