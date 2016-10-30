@@ -139,13 +139,6 @@ any '/users' => sub {
 
 any '/user/:user_id' => sub {
     my $dbh = connect_db();
-    #my $grouping_sth = $dbh->prepare(q+
-    #    SELECT ga.id, g.display_name as grouping, a.display_name as attribute
-    #    FROM grouping g, attribute a, grouping_attribute ga
-    #    WHERE g.id = ga.grouping_id
-    #        AND ga.attribute_id = a.id
-    #    ORDER BY g.id, ga.display_order
-    #+) || die($dbh->errstr());
     my $selection_sth = $dbh->prepare(q+
         SELECT ua.id, ua.value, g.display_name as grouping, a.display_name as attribute
         FROM user_attribute ua, attribute a, grouping_attribute ga, grouping g
