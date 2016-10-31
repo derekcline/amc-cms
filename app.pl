@@ -42,8 +42,6 @@ sub get_flash {
 
 sub connect_db {
 
-    #my $dbh = DBI->connect("dbi:SQLite:dbname=".setting('database')) or
-    #die $DBI::errstr;
     my $dbh = database('amc')
       or die $DBI::errstr;
     Erik::warn();
@@ -71,11 +69,6 @@ hook before_template_render => sub {
 };
 
 get '/' => sub {
-    my $db  = connect_db();
-    my $sql = 'select id, title, text from entries order by id desc';
-    my $sth = $db->prepare($sql) or die $db->errstr;
-    $sth->execute or die $sth->errstr;
-
     if ( session('logged_in') ) {
         redirect '/menu';
     }
@@ -204,7 +197,7 @@ get '/user/:user_id/edit' => sub {
 };
 
 post '/user/:user_id/edit' => sub {
-    Erik::log("THis is the edit section");
+    Erik::log("This is the edit section");
     if (param('cancel')) {
         redirect '/user/' . param('user_id');
     }
@@ -268,6 +261,5 @@ get '/logout' => sub {
     redirect '/';
 };
 
-#init_db();
-start;
+dance;
 
