@@ -30,7 +30,7 @@ create table grouping (
      name tinytext not null,
      display_name text not null,
      description text,
-     type tinytext no null
+     type tinytext not null
 );
 
 insert into grouping (id, name, display_name, description, type) values (1,"shirt_size", "Shirt Size", "Size of T Shirt", "radio");
@@ -85,9 +85,9 @@ create table grouping_attribute (
      constraint foreign key (grouping_id) references grouping (id) on delete cascade on update cascade
 );
 
-insert into grouping_attribute (grouping_id, attribute_id) values (1, 1);
-insert into grouping_attribute (grouping_id, attribute_id) values (1, 2);
-insert into grouping_attribute (grouping_id, attribute_id) values (1, 3);
-insert into grouping_attribute (grouping_id, attribute_id) values (1, 4);
-insert into grouping_attribute (grouping_id, attribute_id) values (2, 5);
+insert into grouping_attribute (grouping_id, attribute_id, display_order) values (1, 1, 1);
+insert into grouping_attribute (grouping_id, attribute_id, display_order) values (1, 2, 2);
+insert into grouping_attribute (grouping_id, attribute_id, display_order) values (1, 3, 3);
+insert into grouping_attribute (grouping_id, attribute_id, display_order) values (1, 4, 4);
+insert into grouping_attribute (grouping_id, attribute_id, display_order) values (2, 5, 1);
 
