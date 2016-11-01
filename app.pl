@@ -149,14 +149,14 @@ get '/user/:user_id/edit' => sub {
 
     my $dbh = connect_db();
     my $grouping_sth = $dbh->prepare(q+
-        SELECT ga.id as id, g.id as grouping_id, a.id as attribute_id, g.display_name as grouping, a.display_name as attribute
+        SELECT ga.id as id, g.id as grouping_id, a.id as attribute_id, g.display_name as grouping, a.display_name as attribute, g.type
         FROM grouping g, attribute a, grouping_attribute ga
         WHERE g.id = ga.grouping_id
             AND ga.attribute_id = a.id
         ORDER BY grouping_id, ga.display_order
     +) || die($dbh->errstr());
     my $selection_sth = $dbh->prepare(q+
-        SELECT ua.id, ua.value, g.display_name as grouping, a.display_name as attribute
+        SELECT ua.id, ua.value, ga.grouping_id, g.display_name as grouping, ua.attribute_id, a.display_name as attribute
         FROM user_attribute ua, attribute a, grouping_attribute ga, grouping g
         WHERE ua.attribute_id = a.id
             AND ua.attribute_id = ga.attribute_id
@@ -173,12 +173,20 @@ get '/user/:user_id/edit' => sub {
     $grouping_sth->execute() || die($dbh->errstr());
     $selection_sth->execute(param('user_id')) || die($dbh->errstr());
     $user_info_sth->execute(param('user_id')) || die($dbh->errstr());
+
+    my $selections = {};
+    while (my $href = $selection_sth->fetchrow_hashref()) {
+        $selections->{$href->{grouping_id}}{$href->{attribute_id}} = $href;
+    }
+    Erik::enable();
+    Erik::dump(selection => $selections);
+
     template 'edit_user.tt',
       {
-        grouping  => $grouping_sth->fetchall_hashref('id'),
-        selection => $selection_sth->fetchall_hashref('id'),
-        msg       => get_flash(),
-        user      => $user_info_sth->fetchrow_hashref(),
+        grouping   => $grouping_sth->fetchall_hashref('id'),
+        selections => $selections,
+        msg        => get_flash(),
+        user       => $user_info_sth->fetchrow_hashref(),
       };
 };
 
@@ -188,6 +196,9 @@ post '/user/:user_id/edit' => sub {
         redirect '/user/' . param('user_id');
     }
     else {
+        Erik::enable();
+        Erik::log();
+        Erik::dump(params => %{params()});
         my $dbh = connect_db();
         my $selection_sth = $dbh->prepare(q+
             SELECT g.id, ua.value, g.display_name as grouping, a.display_name as attribute

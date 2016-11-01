@@ -1,4 +1,6 @@
 [% IF session.logged_in %]
+[%USE Dumper %]
+
 
     <h2>Edit User</h2>
 
@@ -16,11 +18,16 @@
                 <div>[% grouping.$id.grouping %]</div>
             [% END %]
             [% SET grouping_id = grouping.$id.grouping_id %]
-            <div><input type="radio" name="grouping_[% grouping.$id.grouping_id %]" value="[%grouping.$id.attribute_id%]"> [% grouping.$id.attribute %]</div>
-        [% END %]
-        <p />
-        [% FOREACH id IN selection.keys %]
-            <div>[% selection.$id.grouping %]: [% selection.$id.value ? selection.$id.value : selection.$id.attribute %] </div>
+            <!-- building: [% Dumper.dump(selections) %]<br /> -->
+            <!-- building: [% Dumper.dump(selections.${grouping.$id.grouping_id}) %]<br /> -->
+            <!-- building: [% Dumper.dump(selections.${grouping.$id.grouping_id}.${grouping.$id.attribute_id}) %]<br /> -->
+            <!-- building: [% Dumper.dump(selections.${grouping.$id.grouping_id}.${grouping.$id.attribute_id}.value) %]<br /> -->
+            <div>
+                <input type="radio" name="grouping_[% grouping.$id.grouping_id %]" value="[%grouping.$id.attribute_id%]" [% IF selections.${grouping.$id.grouping_id}.${grouping.$id.attribute_id} %] checked [% END %]> [% grouping.$id.attribute %]
+                [% IF grouping.$id.type == "text" %]
+                    <input type="text"name="grouping_[% grouping.$id.grouping_id %]_text" value="[% selections.${grouping.$id.grouping_id}.${grouping.$id.attribute_id}.value %]">
+                [% END %]
+            </div>
         [% END %]
         <p />
         <input type='submit' name='update' value='Update'> <input type='submit' name='cancel' value='Cancel'> 
