@@ -83,20 +83,6 @@ get '/' => sub {
       };
 };
 
-post '/add' => sub {
-    if ( not session('logged_in') ) {
-        send_error( "Not logged in", 401 );
-    }
-
-    my $db  = connect_db();
-    my $sql = 'insert into entries (title, text) values (?, ?)';
-    my $sth = $db->prepare($sql) or die $db->errstr;
-    $sth->execute( params->{'title'}, params->{'text'} ) or die $sth->errstr;
-
-    set_flash('New entry posted!');
-    redirect '/';
-};
-
 any '/menu' => sub {
     Erik::dump( session => session );
     if ( session('logged_in') ) {
