@@ -53,6 +53,7 @@ insert into attribute (id, grouping_id, name, display_name, description) values 
 insert into attribute (id, grouping_id, name, display_name, description) values (3, 1, "L", "Large", "A Large Mother Fucking TShirt");
 insert into attribute (id, grouping_id, name, display_name, description) values (4, 1, "XL", "X-Large", "A Extra Large Mother Fucking TShirt");
 insert into attribute (id, grouping_id, name, display_name, description) values (5, 2, "home", "Home Phone", "");
+insert into attribute (id, grouping_id, name, display_name, description) values (6, 2, "work", "Work Phone", "");
 
 
 
@@ -72,6 +73,7 @@ create table user_attribute (
 
 insert into user_attribute (user_id, attribute_id, value, comment, preferred) values (1, 4, "", "", 0);
 insert into user_attribute (user_id, attribute_id, value, comment, preferred) values (1, 5, "480-555-6666", "", 1);
+insert into user_attribute (user_id, attribute_id, value, comment, preferred) values (1, 6, "480-555-7777", "", 0);
 
 
 -- grouping_attribute
@@ -90,4 +92,5 @@ insert into grouping_attribute (grouping_id, attribute_id, display_order) values
 insert into grouping_attribute (grouping_id, attribute_id, display_order) values (1, 3, 3);
 insert into grouping_attribute (grouping_id, attribute_id, display_order) values (1, 4, 4);
 insert into grouping_attribute (grouping_id, attribute_id, display_order) values (2, 5, 1);
+insert into grouping_attribute (grouping_id, attribute_id, display_order) values (2, 6, 2);
 
