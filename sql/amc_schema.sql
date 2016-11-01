@@ -29,11 +29,12 @@ create table grouping (
      id int(11) not null primary key auto_increment,
      name tinytext not null,
      display_name text not null,
-     description text
+     description text,
+     type tinytext no null
 );
 
-insert into grouping (id, name, display_name, description) values (1,"shirt_size", "Shirt Size", "Size of T Shirt");
-insert into grouping (id, name, display_name, description) values (2, "phone", "Phone Number", "");
+insert into grouping (id, name, display_name, description, type) values (1,"shirt_size", "Shirt Size", "Size of T Shirt", "radio");
+insert into grouping (id, name, display_name, description, type) values (2, "phone", "Phone Number", "", "text");
 
 
 -- attribute
