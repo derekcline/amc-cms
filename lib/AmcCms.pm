@@ -8,7 +8,7 @@ use DBI;
 use File::Spec;
 use File::Slurper qw/ read_text /;
 use Template;
-use Erik ( off );
+use Erik qw( off );
 
 my $prod_mode = 1; # if this is set to true then any login info is needed
 
