@@ -8,7 +8,7 @@ use File::Slurper qw/ read_text /;
 use Template;
 use Erik qw( off );
 
-my $prod_mode = 0; # if this is set to true then any login info is needed
+my $prod_mode = 1; # if this is set to true then any login info is needed
 
 #set 'database'     => File::Spec->catfile(File::Spec->tmpdir(), 'dancr.db');
 set 'session'      => 'Simple';
