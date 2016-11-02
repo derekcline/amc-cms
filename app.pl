@@ -149,7 +149,7 @@ get '/user/:user_id/edit' => sub {
 
     my $dbh = connect_db();
     my $grouping_sth = $dbh->prepare(q+
-        SELECT ga.id as id, g.id as grouping_id, a.id as attribute_id, g.display_name as grouping, a.display_name as attribute, g.type
+        SELECT ga.id as id, g.id as grouping_id, a.id as attribute_id, g.display_name as grouping, a.display_name as attribute, g.type, ga.display_order
         FROM grouping g, attribute a, grouping_attribute ga
         WHERE g.id = ga.grouping_id
             AND ga.attribute_id = a.id
