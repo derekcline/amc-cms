@@ -63,7 +63,7 @@ create table user_attribute (
      id int(11) not null primary key auto_increment,
      user_id int(11) not null,
      attribute_id int(11) not null,
-     value tinytext not null,
+     value tinytext,
      comment text,
      preferred int(1) not null default 0,
      constraint foreign key (attribute_id) references attribute (id) on delete cascade on update cascade,
@@ -71,7 +71,7 @@ create table user_attribute (
      -- primary int(1) not null default 1
 );
 
-insert into user_attribute (user_id, attribute_id, value, comment, preferred) values (1, 4, "", "", 0);
+insert into user_attribute (user_id, attribute_id, value, comment, preferred) values (1, 4, null, "", 0);
 insert into user_attribute (user_id, attribute_id, value, comment, preferred) values (1, 5, "480-555-6666", "", 1);
 insert into user_attribute (user_id, attribute_id, value, comment, preferred) values (1, 6, "480-555-7777", "", 0);
 
