@@ -1,4 +1,6 @@
-#!/usr/bin/env perl
+package AmcCms;
+
+our $VERSION = '0.1';
 
 use Dancer2;
 use Dancer2::Plugin::Database;
@@ -6,7 +8,7 @@ use DBI;
 use File::Spec;
 use File::Slurper qw/ read_text /;
 use Template;
-use Erik qw( off );
+use Erik ( off );
 
 my $prod_mode = 1; # if this is set to true then any login info is needed
 
@@ -292,5 +294,5 @@ get '/logout' => sub {
     redirect '/';
 };
 
-dance;
+true;
 
