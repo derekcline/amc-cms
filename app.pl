@@ -156,7 +156,7 @@ get '/user/:user_id/edit' => sub {
         ORDER BY grouping_id, ga.display_order
     +) || die($dbh->errstr());
     my $selection_sth = $dbh->prepare(q+
-        SELECT ua.id, ua.value, ga.grouping_id, g.display_name as grouping, ua.attribute_id, a.display_name as attribute
+        SELECT ua.id, ua.value, ga.grouping_id, g.display_name as grouping, ua.attribute_id, a.display_name as attribute, ua.preferred
         FROM user_attribute ua, attribute a, grouping_attribute ga, grouping g
         WHERE ua.attribute_id = a.id
             AND ua.attribute_id = ga.attribute_id
@@ -178,7 +178,6 @@ get '/user/:user_id/edit' => sub {
     while (my $href = $selection_sth->fetchrow_hashref()) {
         $selections->{$href->{grouping_id}}{$href->{attribute_id}} = $href;
     }
-    Erik::enable();
     Erik::dump(selection => $selections);
 
     template 'edit_user.tt',
@@ -196,33 +195,68 @@ post '/user/:user_id/edit' => sub {
         redirect '/user/' . param('user_id');
     }
     else {
-        Erik::enable();
         Erik::log();
-        Erik::dump(params => %{params()});
+        Erik::dump(route => route_parameters);
+        Erik::dump(query => query_parameters);
+        Erik::dump(body => body_parameters);
         my $dbh = connect_db();
-        my $selection_sth = $dbh->prepare(q+
-            SELECT g.id, ua.value, g.display_name as grouping, a.display_name as attribute
-            FROM user_attribute ua, attribute a, grouping_attribute ga, grouping g
-            WHERE ua.attribute_id = a.id
-                AND ua.attribute_id = ga.attribute_id
-                AND ga.grouping_id = g.id
-                AND ua.user_id = ?
+        my %new_data;
+        foreach my $param (body_parameters->keys) {
+            if ($param =~ /^grouping_(\d+)(_(\d+)_text)?$/) {
+                my $grouping_id = $1;
+                my $attribute_id = $3 || 0;
+                if ($attribute_id) {
+                    $new_data{groupings}{$grouping_id}{$attribute_id} = body_parameters->get($param);
+                }
+                else {
+                    $new_data{groupings}{$grouping_id}{preferred} = body_parameters->{$param};
+                }
+            }
+            else {
+                $new_data{$param} = body_parameters->{$param};
+            }
+        }
+        Erik::dump(new_data => \%new_data);
+        my $user_sth = $dbh->prepare(q+
+            UPDATE user
+            SET first_name = ?,
+                last_name = ?
+            WHERE id = ?
         +);
-        my $user_info_sth = $dbh->prepare(q+
-            SELECT u.id, u.first_name, u.last_name, a.display_name, ua.value
-            FROM user u, attribute a, user_attribute ua
-            WHERE u.id = ua.user_id
-                AND ua.attribute_id = a.id
-                AND u.id = ?
-        +) || die($dbh->errstr());
-        $selection_sth->execute(param('user_id')) || die($dbh->errstr());
-        $user_info_sth->execute(param('user_id')) || die($dbh->errstr());
-        template 'edit_user.tt',
-          {
-            selection => $selection_sth->fetchall_hashref('id'),
-            msg       => get_flash(),
-            user      => $user_info_sth->fetchrow_hashref(),
-          };
+        $user_sth->execute(
+            $new_data{first_name} || undef,
+            $new_data{last_name} || undef,
+            $new_data{user_id}
+        ) || die("Unable to update user: " . $dbh->errstr() . "\n");
+        $dbh->do(q+delete from user_attribute where user_id = ?+,
+            undef, $new_data{user_id}) || die("Unable to delete user_attribute for user_id (" . $new_data{user_id} . "): " . $dbh->errstr() . "\n");
+        my $selection_sth = $dbh->prepare(q+
+            INSERT INTO user_attribute
+            (user_id, attribute_id, value, preferred)
+            VALUES (?, ?, ?, ?)
+        +);
+        foreach my $grouping_id (keys %{$new_data{groupings}}) {
+            if (scalar keys %{$new_data{groupings}{$grouping_id}} > 1) {
+                foreach my $attribute_id (keys %{$new_data{groupings}{$grouping_id}}) {
+                    next if $attribute_id eq 'preferred';
+                    $selection_sth->execute(
+                        $new_data{user_id},
+                        $attribute_id,
+                        $new_data{groupings}{$grouping_id}{$attribute_id} || undef,
+                        $new_data{groupings}{$grouping_id}{preferred} == $attribute_id ? 1 : 0
+                    );
+                }
+            }
+            else {
+                $selection_sth->execute(
+                    $new_data{user_id},
+                    $new_data{groupings}{$grouping_id}{preferred},
+                    '',
+                    1
+                );
+            }
+        }
+        return redirect '/user/' . $new_data{user_id};
       }
 };
 
