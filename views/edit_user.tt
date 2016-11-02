@@ -10,7 +10,7 @@
         <div>Last Name: <input type='text' name='last_name' value='[% user.last_name %]'></div>
         <p />
         [% SET grouping_id = 0 %]
-        [% FOREACH id IN grouping.keys.sort(display_order) %]
+        [% FOREACH id IN grouping.keys.sort() %]
             [% IF grouping_id != grouping.$id.grouping_id %]
                 [% IF grouping_id %]
                 <p />
